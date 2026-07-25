@@ -11,21 +11,13 @@ html.lenis, html.lenis body {
   scroll-behavior: auto !important;
 }
 
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
 .lenis.lenis-stopped {
   overflow: hidden;
 }
 
-.lenis.lenis-scrolling iframe {
-  pointer-events: none;
-}
-
 :root {
   /* Color Palette */
-  --bg-sky: oklch(0.92 0.06 220);
+  --bg-sky: #FFF0ED;
   --bg-cream: #FFF9E6;
   --tulip-pink: #FF4081;
   --tulip-deep-pink: #C2185B;
@@ -40,8 +32,8 @@ html.lenis, html.lenis body {
   --cat-accent: #E65100;
   --text-dark: #3E2723;
   --text-muted: #6D4C41;
-  --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.7);
+  --glass-bg: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(255, 255, 255, 0.75);
   --shadow-soft: 0 12px 32px rgba(62, 39, 35, 0.14);
   --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.18);
   
@@ -109,19 +101,19 @@ body.paw-cursor-active label {
 }
 
 /* ==========================================================================
-   🌷 HERO STAGE: REALISTIC TULIP GARDEN & CAT
+   🌷 HERO STAGE: DREAMY GOLDEN-HOUR TULIP BACKDROP
    ========================================================================== */
 
 .hero-stage {
   position: relative;
   width: 100vw;
   height: 100vh;
-  min-height: 700px;
+  min-height: 720px;
   overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  background: linear-gradient(180deg, #E0F7FA 0%, #FFF9E6 45%, #C8E6C9 100%);
+  background: linear-gradient(180deg, #FFF0ED 0%, #FFE4E8 35%, #F3E5F5 70%, #E8F5E9 100%);
 }
 
 .sky-backdrop {
@@ -130,27 +122,30 @@ body.paw-cursor-active label {
   pointer-events: none;
 }
 
+/* Dreamy Golden Hour Background Artwork */
 .realistic-garden-bg-image {
   position: absolute;
   inset: 0;
-  background-image: url('assets/realistic_tulip_garden.jpg');
+  background-image: url('assets/dreamy_tulip_backdrop.jpg');
   background-size: cover;
   background-position: center bottom;
-  opacity: 0.45;
-  filter: saturate(1.2) contrast(1.05);
-  mask-image: linear-gradient(to top, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 90%);
-  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 90%);
+  opacity: 0.85;
+  filter: saturate(1.15) contrast(1.02) brightness(1.02);
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0.95) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0,0,0,0.85) 0%, rgba(0,0,0,1) 60%, rgba(0,0,0,0.95) 100%);
 }
 
+/* Sun Glow & Golden Hour Rays */
 .sun-glow {
   position: absolute;
-  top: -80px;
+  top: -60px;
   left: 50%;
   transform: translateX(-50%);
-  width: 450px;
-  height: 450px;
-  background: radial-gradient(circle, rgba(255,245,157,0.8) 0%, rgba(255,255,255,0) 70%);
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(255,224,130,0.65) 0%, rgba(255,183,77,0.3) 40%, rgba(255,255,255,0) 70%);
   border-radius: 50%;
+  pointer-events: none;
 }
 
 .petals-container {
@@ -165,8 +160,8 @@ body.paw-cursor-active label {
   position: absolute;
   background: var(--tulip-pink);
   border-radius: 60% 0 60% 50%;
-  opacity: 0.75;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  opacity: 0.8;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.12);
   animation: fallPetal linear infinite;
 }
 
@@ -190,9 +185,9 @@ body.paw-cursor-active label {
 }
 
 .tulip-garden-background {
-  bottom: 80px;
+  bottom: 75px;
   z-index: 2;
-  filter: blur(1.2px) brightness(0.95);
+  filter: blur(1.5px) brightness(0.95);
 }
 
 .tulip-garden-foreground {
@@ -205,8 +200,8 @@ body.paw-cursor-active label {
   bottom: 0;
   left: 0;
   width: 100%;
-  height: 140px;
-  background: linear-gradient(180deg, rgba(76,175,80,0) 0%, rgba(46,125,50,0.85) 40%, #1B5E20 100%);
+  height: 150px;
+  background: linear-gradient(180deg, rgba(76,175,80,0) 0%, rgba(46,125,50,0.85) 45%, #1B5E20 100%);
   z-index: 8;
   pointer-events: none;
 }
@@ -223,7 +218,7 @@ body.paw-cursor-active label {
   width: 75px;
   height: 230px;
   transform-origin: bottom center;
-  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.18));
+  filter: drop-shadow(0 8px 14px rgba(0,0,0,0.22));
   animation: swayTulipRealistic 3.5s ease-in-out infinite alternate;
 }
 
