@@ -28,12 +28,19 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(raf);
   }
 
-  function smoothScrollTo(target, offsetValue = -20) {
+  function scrollToElement(target, offset = -60) {
+    const el = typeof target === 'string' ? document.querySelector(target) : target;
+    if (!el) return;
+
     if (lenis) {
-      lenis.scrollTo(target, { duration: 1.5, offset: offsetValue });
+      lenis.scrollTo(el, {
+        duration: 1.8,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        offset: offset,
+        immediate: false
+      });
     } else {
-      const el = typeof target === 'string' ? document.querySelector(target) : target;
-      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
@@ -359,7 +366,7 @@ document.addEventListener('DOMContentLoaded', () => {
   proceedToGalleryBtn.addEventListener('click', () => {
     playPopSound();
     postcardsModal.classList.remove('active');
-    smoothScrollTo('#gallerySection', -30);
+    scrollToElement('#gallerySection', -40);
   });
 
   // ==========================================
@@ -427,7 +434,7 @@ document.addEventListener('DOMContentLoaded', () => {
       giftSpeech.querySelector('span').textContent = speechTaunts[attemptCount - 1];
       giftSpeech.style.opacity = '1';
     } else {
-      // Attempt 4: Open Gift Box & Smooth Scroll to Gift Options!
+      // Attempt 4: Open Gift Box & Auto-Scroll to Gift Options Modal!
       playFanfareSound();
       launchConfetti();
 
@@ -435,17 +442,13 @@ document.addEventListener('DOMContentLoaded', () => {
       giftSpeech.querySelector('span').textContent = "Surprise Unlocked! 🎉";
       giftHintText.textContent = "✨ You caught the gift! Select your reward below!";
 
-      // Unfold modal first, then scroll after DOM reflow
+      // Unfold modal immediately
       giftModal.classList.add('active');
 
-      // Use double RAF + setTimeout for reliable DOM layout computation before scrolling
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            smoothScrollTo('#giftModal', -20);
-          }, 100);
-        });
-      });
+      // Scroll cleanly to center the gift selection options in view
+      setTimeout(() => {
+        scrollToElement('#giftModal', -80);
+      }, 200);
     }
   }
 
@@ -473,24 +476,25 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!twistActivated) {
         twistActivated = true;
 
+        // Step 1: Auto-select all options with staggered audio & checkmarks
         giftOptionItems.forEach((opt, idx) => {
           setTimeout(() => {
             opt.classList.add('checked');
             const chk = opt.querySelector('.gift-checkbox');
             if (chk) chk.checked = true;
             playPopSound();
-          }, idx * 120);
+          }, idx * 140);
         });
 
+        // Step 2: Unfold Secret Note & Auto-Scroll to keep the handwritten note centered in view!
         setTimeout(() => {
           playFanfareSound();
           secretNote.classList.add('active');
-          requestAnimationFrame(() => {
-            requestAnimationFrame(() => {
-              smoothScrollTo('#secretNote', -20);
-            });
-          });
-        }, 600);
+
+          setTimeout(() => {
+            scrollToElement('#secretNote', -50);
+          }, 150);
+        }, 650);
       }
     });
   });
