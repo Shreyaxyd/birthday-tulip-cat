@@ -28,12 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(raf);
   }
 
-  function smoothScrollTo(target) {
+  function smoothScrollTo(target, offsetValue = -20) {
     if (lenis) {
-      lenis.scrollTo(target, { duration: 1.6 });
+      lenis.scrollTo(target, { duration: 1.5, offset: offsetValue });
     } else {
       const el = typeof target === 'string' ? document.querySelector(target) : target;
-      if (el) el.scrollIntoView({ behavior: 'smooth' });
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
@@ -275,12 +275,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // 🐈 CAT ENTRANCE & LETTER INTERACTION
   // ==========================================
   const catLetter = document.getElementById('catLetter');
-  const catSpeech = document.getElementById('catSpeech');
   const postcardsModal = document.getElementById('postcardsModal');
   const closePostcards = document.getElementById('closePostcards');
   const modalBackdrop = document.getElementById('modalBackdrop');
 
-  // Trigger Meow after entrance (5.5s)
   setTimeout(() => {
     playMeowSound();
   }, 5500);
@@ -361,7 +359,7 @@ document.addEventListener('DOMContentLoaded', () => {
   proceedToGalleryBtn.addEventListener('click', () => {
     playPopSound();
     postcardsModal.classList.remove('active');
-    smoothScrollTo('#gallerySection');
+    smoothScrollTo('#gallerySection', -30);
   });
 
   // ==========================================
@@ -374,7 +372,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const giftHintText = document.getElementById('giftHintText');
 
   let attemptCount = 0;
-  const maxDodges = 3; // Dodges on attempts 1, 2, 3 -> Opens on attempt 4
+  const maxDodges = 3;
   let isDodgingCooldown = false;
 
   const speechTaunts = [
@@ -389,11 +387,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const boxWidth = 130;
     const boxHeight = 130;
 
-    // Strict safety margins to guarantee zero clipping & zero overlap with top speech bubble!
     const minLeft = 40;
     const maxLeft = Math.max(minLeft, arenaRect.width - boxWidth - 40);
 
-    const minTop = 65; // Keeps top of box cleanly below top speech bubble & top border
+    const minTop = 65;
     const maxTop = Math.max(minTop, arenaRect.height - boxHeight - 40);
 
     const randomLeft = Math.floor(minLeft + Math.random() * (maxLeft - minLeft));
@@ -424,14 +421,13 @@ document.addEventListener('DOMContentLoaded', () => {
     attemptCount++;
 
     if (attemptCount <= maxDodges) {
-      // Attempts 1, 2, 3: Relocate cleanly inside safe bounds
       playPopSound();
       relocateGiftBox();
 
       giftSpeech.querySelector('span').textContent = speechTaunts[attemptCount - 1];
       giftSpeech.style.opacity = '1';
     } else {
-      // Attempt 4: Open Gift Box!
+      // Attempt 4: Open Gift Box & Smooth Scroll to Gift Options!
       playFanfareSound();
       launchConfetti();
 
@@ -439,14 +435,20 @@ document.addEventListener('DOMContentLoaded', () => {
       giftSpeech.querySelector('span').textContent = "Surprise Unlocked! 🎉";
       giftHintText.textContent = "✨ You caught the gift! Select your reward below!";
 
-      setTimeout(() => {
-        giftModal.classList.add('active');
-        smoothScrollTo('#giftModal');
-      }, 300);
+      // Unfold modal first, then scroll after DOM reflow
+      giftModal.classList.add('active');
+
+      // Use double RAF + setTimeout for reliable DOM layout computation before scrolling
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            smoothScrollTo('#giftModal', -20);
+          }, 100);
+        });
+      });
     }
   }
 
-  // Bind click & pointerdown with preventDefault to prevent touch double-triggering
   giftBox.addEventListener('click', handleGiftBoxInteraction);
   giftBox.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'touch') {
@@ -483,7 +485,11 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => {
           playFanfareSound();
           secretNote.classList.add('active');
-          smoothScrollTo('#secretNote');
+          requestAnimationFrame(() => {
+            requestAnimationFrame(() => {
+              smoothScrollTo('#secretNote', -20);
+            });
+          });
         }, 600);
       }
     });
