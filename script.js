@@ -67,6 +67,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  function scrollAllTheWayToBottom() {
+    if (lenis) {
+      lenis.resize();
+      const maxScroll = Math.max(
+        document.body.scrollHeight,
+        document.documentElement.scrollHeight
+      );
+      lenis.scrollTo(maxScroll, {
+        duration: 1.8,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        immediate: false
+      });
+    } else {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+    }
+  }
+
   // ==========================================
   // 🔊 WEB AUDIO API SOUND SYNTH ENGINE
   // ==========================================
@@ -498,7 +515,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!twistActivated) {
         twistActivated = true;
 
-        // Step 1: Auto-select all options one by one with sound effects
+        // Step 1: Auto-select all options one by one
         giftOptionItems.forEach((opt, idx) => {
           setTimeout(() => {
             opt.classList.add('checked');
@@ -508,21 +525,15 @@ document.addEventListener('DOMContentLoaded', () => {
           }, idx * 120);
         });
 
-        // Step 2: Exactly 100ms after click, unfold secret note and auto-scroll continuously all the way to the bottom!
+        // Step 2: Exactly 100ms after click, unfold secret note and continuously scroll all the way to the bottom!
         setTimeout(() => {
           playFanfareSound();
           secretNote.classList.add('active');
 
-          // Smooth scroll all the way to the end so secret note & replay button are perfectly centered in view!
-          if (lenis) {
-            lenis.scrollTo('max', {
-              duration: 1.8,
-              easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-              immediate: false
-            });
-          } else {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-          }
+          // Trigger continuous scroll tracking as note unfolds
+          scrollAllTheWayToBottom();
+          setTimeout(scrollAllTheWayToBottom, 250);
+          setTimeout(scrollAllTheWayToBottom, 600);
         }, 100);
       }
     });
