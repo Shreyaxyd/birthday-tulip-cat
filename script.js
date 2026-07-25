@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 🔊 WEB AUDIO API SOUND SYNTH ENGINE
+  // 🔊 REAL AUTHENTIC CAT AUDIO ENGINE (meow.mp3)
   // ==========================================
   let isSoundMuted = false;
   const audioToggleBtn = document.getElementById('audioToggle');
@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const audioLabel = document.getElementById('audioLabel');
 
   let audioCtx = null;
+  let catMeowBuffer = null;
 
   function getAudioContext() {
     if (!audioCtx) {
@@ -86,6 +87,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     return audioCtx;
   }
+
+  // Pre-load real cat meow audio recording
+  async function loadRealCatMeowAudio() {
+    try {
+      const response = await fetch('assets/meow.mp3');
+      const arrayBuffer = await response.arrayBuffer();
+      const ctx = getAudioContext();
+      catMeowBuffer = await ctx.decodeAudioData(arrayBuffer);
+    } catch (e) {
+      console.warn('Using HTML5 Audio fallback for meow.mp3', e);
+    }
+  }
+  loadRealCatMeowAudio();
 
   // Unlocks Web Audio API on ANY user interaction (click, touch, key, move)
   function unlockAudioEngine() {
@@ -112,12 +126,12 @@ document.addEventListener('DOMContentLoaded', () => {
       audioIcon.className = 'fa-solid fa-volume-high';
       audioLabel.textContent = 'Sound ON';
       audioToggleBtn.style.opacity = '1';
-      playSoothingMeow(1.0, 0.5, 0.35);
+      playRealCatMeow(1.0, 0.7);
     }
   });
 
-  // Rich Cute & Soothing Cat Meow Synthesizer
-  function playSoothingMeow(freqMultiplier = 1.0, duration = 0.55, maxVolume = 0.3) {
+  // Play Real Organic Cat Meow Recording
+  function playRealCatMeow(pitchRate = 1.0, volume = 0.6) {
     if (isSoundMuted) return;
     try {
       const ctx = getAudioContext();
@@ -125,44 +139,25 @@ document.addEventListener('DOMContentLoaded', () => {
         ctx.resume();
       }
 
-      // Dual Oscillators (Sine + Harmonics) for a realistic cute meow
-      const osc1 = ctx.createOscillator();
-      const osc2 = ctx.createOscillator();
-      const gain = ctx.createGain();
+      if (catMeowBuffer) {
+        const source = ctx.createBufferSource();
+        const gainNode = ctx.createGain();
 
-      osc1.type = 'sine';
-      osc2.type = 'triangle';
+        source.buffer = catMeowBuffer;
+        source.playbackRate.value = pitchRate;
+        gainNode.gain.setValueAtTime(volume, ctx.currentTime);
 
-      const now = ctx.currentTime;
-      const startFreq = 400 * freqMultiplier;
-      const peakFreq = 650 * freqMultiplier;
-      const endFreq = 460 * freqMultiplier;
+        source.connect(gainNode);
+        gainNode.connect(ctx.destination);
 
-      osc1.frequency.setValueAtTime(startFreq, now);
-      osc1.frequency.exponentialRampToValueAtTime(peakFreq, now + duration * 0.35);
-      osc1.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
-
-      osc2.frequency.setValueAtTime(startFreq * 1.5, now);
-      osc2.frequency.exponentialRampToValueAtTime(peakFreq * 1.5, now + duration * 0.35);
-      osc2.frequency.exponentialRampToValueAtTime(endFreq * 1.5, now + duration);
-
-      // Volume envelope for smooth vocal curves
-      gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(maxVolume, now + duration * 0.2);
-      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
-
-      const subGain = ctx.createGain();
-      subGain.gain.value = 0.25;
-      osc2.connect(subGain);
-
-      osc1.connect(gain);
-      subGain.connect(gain);
-      gain.connect(ctx.destination);
-
-      osc1.start(now);
-      osc2.start(now);
-      osc1.stop(now + duration);
-      osc2.stop(now + duration);
+        source.start(0);
+      } else {
+        // Fallback HTML5 Audio element
+        const audio = new Audio('assets/meow.mp3');
+        audio.volume = Math.min(1.0, volume);
+        audio.playbackRate = pitchRate;
+        audio.play().catch(() => {});
+      }
     } catch(e) {}
   }
 
@@ -346,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 🐈 CAT ENTRANCE & INTERACTIVE MEOW TIMELINE
+  // 🐈 CAT ENTRANCE & AUTHENTIC MEOW TIMELINE
   // ==========================================
   const catLetter = document.getElementById('catLetter');
   const catCharacter = document.getElementById('catCharacter');
@@ -354,32 +349,32 @@ document.addEventListener('DOMContentLoaded', () => {
   const closePostcards = document.getElementById('closePostcards');
   const modalBackdrop = document.getElementById('modalBackdrop');
 
-  // Entrance Meow Timeline:
-  // Meow 1: As cat peeks above tulips (~1.8s)
+  // Entrance Meow Timeline using REAL cat meow recording:
+  // Meow 1: As cat peeks above tulips (~1.8s) - soft cozy tone
   setTimeout(() => {
-    playSoothingMeow(1.05, 0.5, 0.28);
+    playRealCatMeow(0.92, 0.5);
   }, 1800);
 
-  // Meow 2: As cat steps up into full view (~3.8s)
+  // Meow 2: As cat steps up into full view (~3.8s) - cute natural tone
   setTimeout(() => {
-    playSoothingMeow(0.95, 0.58, 0.32);
+    playRealCatMeow(1.0, 0.6);
   }, 3800);
 
-  // Meow 3: Soft happy meow when speech bubble pops (~5.6s)
+  // Meow 3: Happy meow when speech bubble pops (~5.6s) - sweet high tone
   setTimeout(() => {
-    playSoothingMeow(1.1, 0.45, 0.30);
+    playRealCatMeow(1.08, 0.55);
   }, 5600);
 
-  // Click or Hover on Cat to hear cute soothing meows anytime!
+  // Click or Hover on Cat to hear real cute cat meows anytime!
   catCharacter.addEventListener('click', (e) => {
-    if (e.target.closest('#catLetter')) return; // Letter click handled separately
+    if (e.target.closest('#catLetter')) return;
     unlockAudioEngine();
-    playSoothingMeow(1.0 + Math.random() * 0.2, 0.5, 0.35);
+    playRealCatMeow(0.95 + Math.random() * 0.2, 0.65);
   });
 
   catLetter.addEventListener('click', () => {
     unlockAudioEngine();
-    playSoothingMeow(1.15, 0.45, 0.35);
+    playRealCatMeow(1.1, 0.65);
     playPaperSound();
     postcardsModal.classList.add('active');
   });
