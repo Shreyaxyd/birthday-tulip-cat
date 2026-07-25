@@ -87,18 +87,22 @@ document.addEventListener('DOMContentLoaded', () => {
     return audioCtx;
   }
 
-  // Unlock AudioContext on first user touch/click
-  const unlockAudioOnUserInteraction = () => {
+  // Unlocks Web Audio API on ANY user interaction (click, touch, key, move)
+  function unlockAudioEngine() {
     try {
-      getAudioContext();
+      const ctx = getAudioContext();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
     } catch(e) {}
-    window.removeEventListener('pointerdown', unlockAudioOnUserInteraction);
-    window.removeEventListener('keydown', unlockAudioOnUserInteraction);
-  };
-  window.addEventListener('pointerdown', unlockAudioOnUserInteraction);
-  window.addEventListener('keydown', unlockAudioOnUserInteraction);
+  }
+
+  window.addEventListener('pointerdown', unlockAudioEngine, { once: false });
+  window.addEventListener('click', unlockAudioEngine, { once: false });
+  window.addEventListener('keydown', unlockAudioEngine, { once: false });
 
   audioToggleBtn.addEventListener('click', () => {
+    unlockAudioEngine();
     isSoundMuted = !isSoundMuted;
     if (isSoundMuted) {
       audioIcon.className = 'fa-solid fa-volume-xmark';
@@ -108,39 +112,57 @@ document.addEventListener('DOMContentLoaded', () => {
       audioIcon.className = 'fa-solid fa-volume-high';
       audioLabel.textContent = 'Sound ON';
       audioToggleBtn.style.opacity = '1';
-      playSoothingMeow(1.0, 0.4, 0.12);
+      playSoothingMeow(1.0, 0.5, 0.35);
     }
   });
 
-  // Soothing Gentle Meow Sound Generator
-  function playSoothingMeow(freqMultiplier = 1.0, duration = 0.5, maxVolume = 0.12) {
+  // Rich Cute & Soothing Cat Meow Synthesizer
+  function playSoothingMeow(freqMultiplier = 1.0, duration = 0.55, maxVolume = 0.3) {
     if (isSoundMuted) return;
     try {
       const ctx = getAudioContext();
-      const osc = ctx.createOscillator();
+      if (ctx.state === 'suspended') {
+        ctx.resume();
+      }
+
+      // Dual Oscillators (Sine + Harmonics) for a realistic cute meow
+      const osc1 = ctx.createOscillator();
+      const osc2 = ctx.createOscillator();
       const gain = ctx.createGain();
 
-      osc.type = 'sine';
-      
-      const startFreq = 380 * freqMultiplier;
-      const peakFreq = 540 * freqMultiplier;
-      const endFreq = 420 * freqMultiplier;
+      osc1.type = 'sine';
+      osc2.type = 'triangle';
 
       const now = ctx.currentTime;
-      osc.frequency.setValueAtTime(startFreq, now);
-      osc.frequency.exponentialRampToValueAtTime(peakFreq, now + duration * 0.4);
-      osc.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+      const startFreq = 400 * freqMultiplier;
+      const peakFreq = 650 * freqMultiplier;
+      const endFreq = 460 * freqMultiplier;
 
-      // Soft envelope for a gentle, soothing sound
+      osc1.frequency.setValueAtTime(startFreq, now);
+      osc1.frequency.exponentialRampToValueAtTime(peakFreq, now + duration * 0.35);
+      osc1.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+
+      osc2.frequency.setValueAtTime(startFreq * 1.5, now);
+      osc2.frequency.exponentialRampToValueAtTime(peakFreq * 1.5, now + duration * 0.35);
+      osc2.frequency.exponentialRampToValueAtTime(endFreq * 1.5, now + duration);
+
+      // Volume envelope for smooth vocal curves
       gain.gain.setValueAtTime(0, now);
-      gain.gain.linearRampToValueAtTime(maxVolume, now + duration * 0.15);
+      gain.gain.linearRampToValueAtTime(maxVolume, now + duration * 0.2);
       gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
-      osc.connect(gain);
+      const subGain = ctx.createGain();
+      subGain.gain.value = 0.25;
+      osc2.connect(subGain);
+
+      osc1.connect(gain);
+      subGain.connect(gain);
       gain.connect(ctx.destination);
 
-      osc.start(now);
-      osc.stop(now + duration);
+      osc1.start(now);
+      osc2.start(now);
+      osc1.stop(now + duration);
+      osc2.stop(now + duration);
     } catch(e) {}
   }
 
@@ -148,6 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isSoundMuted) return;
     try {
       const ctx = getAudioContext();
+      if (ctx.state === 'suspended') ctx.resume();
       const osc = ctx.createOscillator();
       const gain = ctx.createGain();
 
@@ -155,7 +178,7 @@ document.addEventListener('DOMContentLoaded', () => {
       osc.frequency.setValueAtTime(600, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.08);
 
-      gain.gain.setValueAtTime(0.2, ctx.currentTime);
+      gain.gain.setValueAtTime(0.25, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
 
       osc.connect(gain);
@@ -170,6 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isSoundMuted) return;
     try {
       const ctx = getAudioContext();
+      if (ctx.state === 'suspended') ctx.resume();
       const bufferSize = ctx.sampleRate * 0.15;
       const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
       const output = buffer.getChannelData(0);
@@ -184,7 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
       filter.frequency.value = 1200;
 
       const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.12, ctx.currentTime);
+      gain.gain.setValueAtTime(0.18, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
 
       whiteNoise.connect(filter);
@@ -199,6 +223,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (isSoundMuted) return;
     try {
       const ctx = getAudioContext();
+      if (ctx.state === 'suspended') ctx.resume();
       const notes = [523.25, 659.25, 783.99, 1046.50];
       notes.forEach((freq, idx) => {
         const osc = ctx.createOscillator();
@@ -209,7 +234,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const startTime = ctx.currentTime + idx * 0.1;
         gain.gain.setValueAtTime(0, startTime);
-        gain.gain.linearRampToValueAtTime(0.2, startTime + 0.05);
+        gain.gain.linearRampToValueAtTime(0.25, startTime + 0.05);
         gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.5);
 
         osc.connect(gain);
@@ -321,30 +346,40 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 🐈 CAT ENTRANCE & SOOTHING SOUND TIMELINE
+  // 🐈 CAT ENTRANCE & INTERACTIVE MEOW TIMELINE
   // ==========================================
   const catLetter = document.getElementById('catLetter');
+  const catCharacter = document.getElementById('catCharacter');
   const postcardsModal = document.getElementById('postcardsModal');
   const closePostcards = document.getElementById('closePostcards');
   const modalBackdrop = document.getElementById('modalBackdrop');
 
-  // Soothing Meow 1: As cat peeks above tulips (~1.8s)
+  // Entrance Meow Timeline:
+  // Meow 1: As cat peeks above tulips (~1.8s)
   setTimeout(() => {
-    playSoothingMeow(1.05, 0.45, 0.10);
+    playSoothingMeow(1.05, 0.5, 0.28);
   }, 1800);
 
-  // Soothing Meow 2: As cat steps up into full view (~3.8s)
+  // Meow 2: As cat steps up into full view (~3.8s)
   setTimeout(() => {
-    playSoothingMeow(0.95, 0.55, 0.12);
+    playSoothingMeow(0.95, 0.58, 0.32);
   }, 3800);
 
-  // Soothing Meow 3: Soft happy meow when speech bubble pops (~5.6s)
+  // Meow 3: Soft happy meow when speech bubble pops (~5.6s)
   setTimeout(() => {
-    playSoothingMeow(1.1, 0.4, 0.11);
+    playSoothingMeow(1.1, 0.45, 0.30);
   }, 5600);
 
+  // Click or Hover on Cat to hear cute soothing meows anytime!
+  catCharacter.addEventListener('click', (e) => {
+    if (e.target.closest('#catLetter')) return; // Letter click handled separately
+    unlockAudioEngine();
+    playSoothingMeow(1.0 + Math.random() * 0.2, 0.5, 0.35);
+  });
+
   catLetter.addEventListener('click', () => {
-    playSoothingMeow(1.15, 0.35, 0.12);
+    unlockAudioEngine();
+    playSoothingMeow(1.15, 0.45, 0.35);
     playPaperSound();
     postcardsModal.classList.add('active');
   });
