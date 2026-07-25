@@ -365,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ==========================================
-  // 🎁 ROBUST & PLAYFUL GIFT BOX DODGING GAME
+  // 🎁 SAFE & FOOLPROOF GIFT BOX DODGING GAME
   // ==========================================
   const giftArena = document.getElementById('giftArena');
   const giftBox = document.getElementById('giftBox');
@@ -386,38 +386,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function relocateGiftBox() {
     const arenaRect = giftArena.getBoundingClientRect();
-    const boxWidth = giftBox.offsetWidth || 130;
-    const boxHeight = giftBox.offsetHeight || 130;
+    const boxWidth = 130;
+    const boxHeight = 130;
 
-    const maxLeft = Math.max(20, arenaRect.width - boxWidth - 30);
-    const maxTop = Math.max(20, arenaRect.height - boxHeight - 30);
+    // Strict safety margins to guarantee zero clipping & zero overlap with top speech bubble!
+    const minLeft = 40;
+    const maxLeft = Math.max(minLeft, arenaRect.width - boxWidth - 40);
 
-    const randomLeft = Math.floor(Math.random() * maxLeft);
-    const randomTop = Math.floor(Math.random() * maxTop);
+    const minTop = 65; // Keeps top of box cleanly below top speech bubble & top border
+    const maxTop = Math.max(minTop, arenaRect.height - boxHeight - 40);
+
+    const randomLeft = Math.floor(minLeft + Math.random() * (maxLeft - minLeft));
+    const randomTop = Math.floor(minTop + Math.random() * (maxTop - minTop));
 
     giftBox.style.left = `${randomLeft}px`;
     giftBox.style.top = `${randomTop}px`;
-    giftBox.style.transform = 'scale(0.9) rotate(8deg)';
+    giftBox.style.transform = 'scale(0.92) rotate(8deg)';
 
     setTimeout(() => {
       giftBox.style.transform = 'scale(1) rotate(0deg)';
-    }, 200);
+    }, 180);
   }
 
   function handleGiftBoxInteraction(e) {
-    if (e) e.stopPropagation();
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
 
     if (isDodgingCooldown) return;
     isDodgingCooldown = true;
 
     setTimeout(() => {
       isDodgingCooldown = false;
-    }, 350);
+    }, 300);
 
     attemptCount++;
 
     if (attemptCount <= maxDodges) {
-      // Attempts 1, 2, 3: Playful dodge away!
+      // Attempts 1, 2, 3: Relocate cleanly inside safe bounds
       playPopSound();
       relocateGiftBox();
 
@@ -439,7 +446,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Bind both click and pointerdown for instant registration
+  // Bind click & pointerdown with preventDefault to prevent touch double-triggering
   giftBox.addEventListener('click', handleGiftBoxInteraction);
   giftBox.addEventListener('pointerdown', (e) => {
     if (e.pointerType === 'touch') {
@@ -464,7 +471,6 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!twistActivated) {
         twistActivated = true;
 
-        // Twist: Check ALL options simultaneously!
         giftOptionItems.forEach((opt, idx) => {
           setTimeout(() => {
             opt.classList.add('checked');
@@ -474,7 +480,6 @@ document.addEventListener('DOMContentLoaded', () => {
           }, idx * 120);
         });
 
-        // Unfold Secret Note
         setTimeout(() => {
           playFanfareSound();
           secretNote.classList.add('active');
