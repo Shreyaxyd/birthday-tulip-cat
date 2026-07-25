@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (typeof Lenis !== 'undefined') {
     lenis = new Lenis({
       duration: 1.4,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)), // Exponential inertia curve
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
@@ -28,7 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
     requestAnimationFrame(raf);
   }
 
-  // Helper smooth scroll function using Lenis
   function smoothScrollTo(target) {
     if (lenis) {
       lenis.scrollTo(target, { duration: 1.6 });
@@ -72,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Sound Synth Functions
   function playMeowSound() {
     if (isSoundMuted) return;
     try {
@@ -333,7 +331,6 @@ document.addEventListener('DOMContentLoaded', () => {
     currentCardNum.textContent = currentCardIndex + 1;
   }
 
-  // Click on active card -> Advance to next
   postcardItems.forEach((card) => {
     card.addEventListener('click', (e) => {
       if (e.target.closest('.scroll-to-gallery-btn')) return;
@@ -368,7 +365,7 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // ==========================================
-  // 🎁 PLAYFUL DODGING GIFT BOX MINI-GAME
+  // 🎁 ROBUST & PLAYFUL GIFT BOX DODGING GAME
   // ==========================================
   const giftArena = document.getElementById('giftArena');
   const giftBox = document.getElementById('giftBox');
@@ -376,58 +373,77 @@ document.addEventListener('DOMContentLoaded', () => {
   const giftModal = document.getElementById('giftModal');
   const giftHintText = document.getElementById('giftHintText');
 
-  let dodgeCount = 0;
-  const maxDodges = 3; // Dodges 3 times, opens on 4th click
+  let attemptCount = 0;
+  const maxDodges = 3; // Dodges on attempts 1, 2, 3 -> Opens on attempt 4
+  let isDodgingCooldown = false;
 
   const speechTaunts = [
-    "Not so fast! 😹🐾",
-    "Too slow! Try again! 😜",
-    "Okay okay, one more try! 🎁✨",
+    "Not so fast! Catch me! 😜 (1/3)",
+    "Whoops! Too slow! 🐾 (2/3)",
+    "Okay okay, one last try! 🎁 (3/3)",
     "Yay! You caught me! 🎉"
   ];
 
-  function dodgeGiftBox() {
-    if (dodgeCount >= maxDodges) return;
-
-    dodgeCount++;
-    playPopSound();
-
+  function relocateGiftBox() {
     const arenaRect = giftArena.getBoundingClientRect();
-    const boxRect = giftBox.getBoundingClientRect();
+    const boxWidth = giftBox.offsetWidth || 130;
+    const boxHeight = giftBox.offsetHeight || 130;
 
-    const maxLeft = arenaRect.width - boxRect.width - 40;
-    const maxTop = arenaRect.height - boxRect.height - 40;
+    const maxLeft = Math.max(20, arenaRect.width - boxWidth - 30);
+    const maxTop = Math.max(20, arenaRect.height - boxHeight - 30);
 
-    const newLeft = Math.max(20, Math.floor(Math.random() * maxLeft));
-    const newTop = Math.max(20, Math.floor(Math.random() * maxTop));
+    const randomLeft = Math.floor(Math.random() * maxLeft);
+    const randomTop = Math.floor(Math.random() * maxTop);
 
-    giftBox.style.left = `${newLeft}px`;
-    giftBox.style.top = `${newTop}px`;
+    giftBox.style.left = `${randomLeft}px`;
+    giftBox.style.top = `${randomTop}px`;
+    giftBox.style.transform = 'scale(0.9) rotate(8deg)';
 
-    giftSpeech.querySelector('span').textContent = speechTaunts[dodgeCount - 1] || speechTaunts[0];
-    giftSpeech.style.opacity = '1';
+    setTimeout(() => {
+      giftBox.style.transform = 'scale(1) rotate(0deg)';
+    }, 200);
   }
 
-  // Hover / Touch interaction triggers dodge
-  giftBox.addEventListener('mouseenter', () => {
-    if (dodgeCount < maxDodges) {
-      dodgeGiftBox();
-    }
-  });
+  function handleGiftBoxInteraction(e) {
+    if (e) e.stopPropagation();
 
-  giftBox.addEventListener('click', () => {
-    if (dodgeCount < maxDodges) {
-      dodgeGiftBox();
+    if (isDodgingCooldown) return;
+    isDodgingCooldown = true;
+
+    setTimeout(() => {
+      isDodgingCooldown = false;
+    }, 350);
+
+    attemptCount++;
+
+    if (attemptCount <= maxDodges) {
+      // Attempts 1, 2, 3: Playful dodge away!
+      playPopSound();
+      relocateGiftBox();
+
+      giftSpeech.querySelector('span').textContent = speechTaunts[attemptCount - 1];
+      giftSpeech.style.opacity = '1';
     } else {
-      // 4th Click: Open Gift Box!
+      // Attempt 4: Open Gift Box!
       playFanfareSound();
       launchConfetti();
 
+      giftBox.classList.add('opened');
       giftSpeech.querySelector('span').textContent = "Surprise Unlocked! 🎉";
-      giftHintText.textContent = "✨ You did it! Your birthday options are ready below!";
+      giftHintText.textContent = "✨ You caught the gift! Select your reward below!";
 
-      giftModal.classList.add('active');
-      smoothScrollTo('#giftModal');
+      setTimeout(() => {
+        giftModal.classList.add('active');
+        smoothScrollTo('#giftModal');
+      }, 300);
+    }
+  }
+
+  // Bind both click and pointerdown for instant registration
+  giftBox.addEventListener('click', handleGiftBoxInteraction);
+  giftBox.addEventListener('pointerdown', (e) => {
+    if (e.pointerType === 'touch') {
+      handleGiftBoxInteraction(e);
     }
   });
 
