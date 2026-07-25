@@ -498,25 +498,32 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!twistActivated) {
         twistActivated = true;
 
-        // Step 1: Auto-select all options with staggered audio & checkmarks
+        // Step 1: Auto-select all options one by one with sound effects
         giftOptionItems.forEach((opt, idx) => {
           setTimeout(() => {
             opt.classList.add('checked');
             const chk = opt.querySelector('.gift-checkbox');
             if (chk) chk.checked = true;
             playPopSound();
-          }, idx * 140);
+          }, idx * 120);
         });
 
-        // Step 2: Unfold Secret Note & Auto-Scroll to keep the handwritten note centered in view!
+        // Step 2: Exactly 100ms after click, unfold secret note and auto-scroll continuously all the way to the bottom!
         setTimeout(() => {
           playFanfareSound();
           secretNote.classList.add('active');
 
-          setTimeout(() => {
-            scrollToElement('#secretNote', -50);
-          }, 150);
-        }, 650);
+          // Smooth scroll all the way to the end so secret note & replay button are perfectly centered in view!
+          if (lenis) {
+            lenis.scrollTo('max', {
+              duration: 1.8,
+              easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+              immediate: false
+            });
+          } else {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+          }
+        }, 100);
       }
     });
   });
