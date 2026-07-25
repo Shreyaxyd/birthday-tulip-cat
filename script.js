@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let lenis = null;
   if (typeof Lenis !== 'undefined') {
     lenis = new Lenis({
-      duration: 1.4,
+      duration: 1.6,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
     lenis.stop();
   }
 
-  // Prevent touch move / wheel events while locked
+  // Prevent wheel & touch move while locked
   window.addEventListener('wheel', (e) => {
     if (document.body.classList.contains('scroll-locked')) {
       e.preventDefault();
@@ -51,13 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function scrollToElement(target, offset = -60) {
+  function scrollToElement(target, offset = -30) {
     const el = typeof target === 'string' ? document.querySelector(target) : target;
     if (!el) return;
 
     if (lenis) {
       lenis.scrollTo(el, {
-        duration: 1.8,
+        duration: 2.0,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         offset: offset,
         immediate: false
@@ -386,7 +386,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // 🗝️ UNLOCK BUTTON ON CARD 4: Unlocks website scrolling & scrolls down to Gallery!
+  // 🗝️ UNLOCK BUTTON ON CARD 4: Unlocks website & auto-scrolls down to Gallery!
   proceedToGalleryBtn.addEventListener('click', () => {
     playPopSound();
     playFanfareSound();
@@ -397,10 +397,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Step 2: Unlock body scrolling & Lenis
     unlockPageScrolling();
 
-    // Step 3: Smooth scroll down to Gallery section
+    // Step 3: Auto-scroll smoothly down to Gallery as the website unlocks!
     setTimeout(() => {
-      scrollToElement('#gallerySection', -40);
-    }, 250);
+      scrollToElement('#gallerySection', -30);
+    }, 350);
   });
 
   // ==========================================
