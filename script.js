@@ -87,6 +87,17 @@ document.addEventListener('DOMContentLoaded', () => {
     return audioCtx;
   }
 
+  // Unlock AudioContext on first user touch/click
+  const unlockAudioOnUserInteraction = () => {
+    try {
+      getAudioContext();
+    } catch(e) {}
+    window.removeEventListener('pointerdown', unlockAudioOnUserInteraction);
+    window.removeEventListener('keydown', unlockAudioOnUserInteraction);
+  };
+  window.addEventListener('pointerdown', unlockAudioOnUserInteraction);
+  window.addEventListener('keydown', unlockAudioOnUserInteraction);
+
   audioToggleBtn.addEventListener('click', () => {
     isSoundMuted = !isSoundMuted;
     if (isSoundMuted) {
@@ -97,11 +108,12 @@ document.addEventListener('DOMContentLoaded', () => {
       audioIcon.className = 'fa-solid fa-volume-high';
       audioLabel.textContent = 'Sound ON';
       audioToggleBtn.style.opacity = '1';
-      playMeowSound();
+      playSoothingMeow(1.0, 0.4, 0.12);
     }
   });
 
-  function playMeowSound() {
+  // Soothing Gentle Meow Sound Generator
+  function playSoothingMeow(freqMultiplier = 1.0, duration = 0.5, maxVolume = 0.12) {
     if (isSoundMuted) return;
     try {
       const ctx = getAudioContext();
@@ -109,19 +121,26 @@ document.addEventListener('DOMContentLoaded', () => {
       const gain = ctx.createGain();
 
       osc.type = 'sine';
-      osc.frequency.setValueAtTime(400, ctx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(750, ctx.currentTime + 0.15);
-      osc.frequency.exponentialRampToValueAtTime(450, ctx.currentTime + 0.35);
+      
+      const startFreq = 380 * freqMultiplier;
+      const peakFreq = 540 * freqMultiplier;
+      const endFreq = 420 * freqMultiplier;
 
-      gain.gain.setValueAtTime(0, ctx.currentTime);
-      gain.gain.linearRampToValueAtTime(0.3, ctx.currentTime + 0.05);
-      gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+      const now = ctx.currentTime;
+      osc.frequency.setValueAtTime(startFreq, now);
+      osc.frequency.exponentialRampToValueAtTime(peakFreq, now + duration * 0.4);
+      osc.frequency.exponentialRampToValueAtTime(endFreq, now + duration);
+
+      // Soft envelope for a gentle, soothing sound
+      gain.gain.setValueAtTime(0, now);
+      gain.gain.linearRampToValueAtTime(maxVolume, now + duration * 0.15);
+      gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
 
       osc.connect(gain);
       gain.connect(ctx.destination);
 
-      osc.start();
-      osc.stop(ctx.currentTime + 0.4);
+      osc.start(now);
+      osc.stop(now + duration);
     } catch(e) {}
   }
 
@@ -136,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
       osc.frequency.setValueAtTime(600, ctx.currentTime);
       osc.frequency.exponentialRampToValueAtTime(200, ctx.currentTime + 0.08);
 
-      gain.gain.setValueAtTime(0.3, ctx.currentTime);
+      gain.gain.setValueAtTime(0.2, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
 
       osc.connect(gain);
@@ -165,7 +184,7 @@ document.addEventListener('DOMContentLoaded', () => {
       filter.frequency.value = 1200;
 
       const gain = ctx.createGain();
-      gain.gain.setValueAtTime(0.15, ctx.currentTime);
+      gain.gain.setValueAtTime(0.12, ctx.currentTime);
       gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.15);
 
       whiteNoise.connect(filter);
@@ -190,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const startTime = ctx.currentTime + idx * 0.1;
         gain.gain.setValueAtTime(0, startTime);
-        gain.gain.linearRampToValueAtTime(0.25, startTime + 0.05);
+        gain.gain.linearRampToValueAtTime(0.2, startTime + 0.05);
         gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.5);
 
         osc.connect(gain);
@@ -302,19 +321,30 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 🐈 CAT ENTRANCE & LETTER INTERACTION
+  // 🐈 CAT ENTRANCE & SOOTHING SOUND TIMELINE
   // ==========================================
   const catLetter = document.getElementById('catLetter');
   const postcardsModal = document.getElementById('postcardsModal');
   const closePostcards = document.getElementById('closePostcards');
   const modalBackdrop = document.getElementById('modalBackdrop');
 
+  // Soothing Meow 1: As cat peeks above tulips (~1.8s)
   setTimeout(() => {
-    playMeowSound();
-  }, 5500);
+    playSoothingMeow(1.05, 0.45, 0.10);
+  }, 1800);
+
+  // Soothing Meow 2: As cat steps up into full view (~3.8s)
+  setTimeout(() => {
+    playSoothingMeow(0.95, 0.55, 0.12);
+  }, 3800);
+
+  // Soothing Meow 3: Soft happy meow when speech bubble pops (~5.6s)
+  setTimeout(() => {
+    playSoothingMeow(1.1, 0.4, 0.11);
+  }, 5600);
 
   catLetter.addEventListener('click', () => {
-    playMeowSound();
+    playSoothingMeow(1.15, 0.35, 0.12);
     playPaperSound();
     postcardsModal.classList.add('active');
   });
