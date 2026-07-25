@@ -2,6 +2,18 @@
    🌸 BIRTHDAY CAT & TULIP GARDEN — REALISTIC GARDEN DESIGN SYSTEM
    ========================================================================== */
 
+/* 🚫 HIDE ALL SCROLLBARS GLOBALLY */
+::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+html, body {
+  -ms-overflow-style: none !important;  /* IE and Edge */
+  scrollbar-width: none !important;  /* Firefox */
+}
+
 /* Lenis Smooth Scroll Overrides */
 html.lenis, html.lenis body {
   height: auto;
@@ -13,6 +25,26 @@ html.lenis, html.lenis body {
 
 .lenis.lenis-stopped {
   overflow: hidden;
+}
+
+/* 🔒 INITIAL LOCKED STATE (Page cannot be scrolled until unlocked via Card 4) */
+body.scroll-locked {
+  overflow: hidden !important;
+  height: 100vh !important;
+  touch-action: none !important;
+}
+
+.unlocked-section {
+  opacity: 0;
+  transform: translateY(40px);
+  pointer-events: none;
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+body:not(.scroll-locked) .unlocked-section {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
 }
 
 :root {

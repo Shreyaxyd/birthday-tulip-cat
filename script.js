@@ -5,7 +5,7 @@
 document.addEventListener('DOMContentLoaded', () => {
 
   // ==========================================
-  // 🚀 LENIS SMOOTH SCROLL INITIALIZATION
+  // 🚀 LENIS SMOOTH SCROLL & INITIAL LOCK
   // ==========================================
   let lenis = null;
   if (typeof Lenis !== 'undefined') {
@@ -26,6 +26,29 @@ document.addEventListener('DOMContentLoaded', () => {
       requestAnimationFrame(raf);
     }
     requestAnimationFrame(raf);
+
+    // Lock scrolling initially on landing!
+    lenis.stop();
+  }
+
+  // Prevent touch move / wheel events while locked
+  window.addEventListener('wheel', (e) => {
+    if (document.body.classList.contains('scroll-locked')) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  window.addEventListener('touchmove', (e) => {
+    if (document.body.classList.contains('scroll-locked')) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+
+  function unlockPageScrolling() {
+    document.body.classList.remove('scroll-locked');
+    if (lenis) {
+      lenis.start();
+    }
   }
 
   function scrollToElement(target, offset = -60) {
@@ -363,10 +386,21 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
+  // 🗝️ UNLOCK BUTTON ON CARD 4: Unlocks website scrolling & scrolls down to Gallery!
   proceedToGalleryBtn.addEventListener('click', () => {
     playPopSound();
+    playFanfareSound();
+    
+    // Step 1: Close postcard modal
     postcardsModal.classList.remove('active');
-    scrollToElement('#gallerySection', -40);
+
+    // Step 2: Unlock body scrolling & Lenis
+    unlockPageScrolling();
+
+    // Step 3: Smooth scroll down to Gallery section
+    setTimeout(() => {
+      scrollToElement('#gallerySection', -40);
+    }, 250);
   });
 
   // ==========================================
