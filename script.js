@@ -51,13 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  function scrollToElement(target, offset = -30) {
+  function scrollToElement(target, offset = -40) {
     const el = typeof target === 'string' ? document.querySelector(target) : target;
     if (!el) return;
 
     if (lenis) {
       lenis.scrollTo(el, {
-        duration: 2.0,
+        duration: 1.8,
         easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
         offset: offset,
         immediate: false
@@ -467,10 +467,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // Unfold modal immediately
       giftModal.classList.add('active');
 
-      // Scroll cleanly to center the gift selection options in view
+      // Wait 800ms so user enjoys the confetti burst & open box, then auto-scrolls down to "Select Your Special Birthday Gift!"
       setTimeout(() => {
-        scrollToElement('#giftModal', -80);
-      }, 200);
+        scrollToElement('#giftModal', -50);
+      }, 800);
     }
   }
 
