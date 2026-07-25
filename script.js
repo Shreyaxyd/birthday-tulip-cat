@@ -467,10 +467,10 @@ document.addEventListener('DOMContentLoaded', () => {
       // Unfold modal immediately
       giftModal.classList.add('active');
 
-      // Wait 800ms so user enjoys the confetti burst & open box, then auto-scrolls down to "Select Your Special Birthday Gift!"
+      // Wait 300ms so user sees the box open, then auto-scrolls down to "Select Your Special Birthday Gift!"
       setTimeout(() => {
         scrollToElement('#giftModal', -50);
-      }, 800);
+      }, 300);
     }
   }
 
