@@ -1,0 +1,1029 @@
+/* ==========================================================================
+   🌸 BIRTHDAY CAT & TULIP GARDEN — REALISTIC GARDEN DESIGN SYSTEM
+   ========================================================================== */
+
+/* Lenis Smooth Scroll Overrides */
+html.lenis, html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
+}
+
+:root {
+  /* Color Palette */
+  --bg-sky: oklch(0.92 0.06 220);
+  --bg-cream: #FFF9E6;
+  --tulip-pink: #FF4081;
+  --tulip-deep-pink: #C2185B;
+  --tulip-yellow: #FFC107;
+  --tulip-purple: #8E24AA;
+  --tulip-red: #D32F2F;
+  --tulip-coral: #FF7043;
+  --garden-green: #2E7D32;
+  --garden-light-green: #4CAF50;
+  
+  --cat-orange: #FFB74D;
+  --cat-accent: #E65100;
+  --text-dark: #3E2723;
+  --text-muted: #6D4C41;
+  --glass-bg: rgba(255, 255, 255, 0.85);
+  --glass-border: rgba(255, 255, 255, 0.7);
+  --shadow-soft: 0 12px 32px rgba(62, 39, 35, 0.14);
+  --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.18);
+  
+  --font-heading: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+  --font-handwriting: 'Caveat', cursive;
+  
+  --radius-sm: 12px;
+  --radius-md: 20px;
+  --radius-lg: 32px;
+}
+
+/* Reset & Base Setup */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background-color: var(--bg-cream);
+  color: var(--text-dark);
+  overflow-x: hidden;
+  line-height: 1.6;
+}
+
+/* Custom Paw Cursor Setup */
+body.paw-cursor-active, 
+body.paw-cursor-active a, 
+body.paw-cursor-active button, 
+body.paw-cursor-active input, 
+body.paw-cursor-active label {
+  cursor: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='36' height='36' viewBox='0 0 36 36'><path fill='%23FF80AB' stroke='%23424242' stroke-width='1.5' d='M18 22c-3.5 0-6.5 2-6.5 5 0 2.5 2.5 4 6.5 4s6.5-1.5 6.5-4c0-3-3-5-6.5-5z'/><circle cx='10' cy='18' r='3.5' fill='%23FF80AB' stroke='%23424242' stroke-width='1.2'/><circle cx='16' cy='14' r='3.8' fill='%23FF80AB' stroke='%23424242' stroke-width='1.2'/><circle cx='23' cy='15' r='3.8' fill='%23FF80AB' stroke='%23424242' stroke-width='1.2'/><circle cx='28' cy='20' r='3.2' fill='%23FF80AB' stroke='%23424242' stroke-width='1.2'/></svg>") 18 18, auto !important;
+}
+
+/* Audio Floating Controller */
+.audio-control-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}
+
+.audio-btn {
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  padding: 10px 18px;
+  border-radius: 30px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--text-dark);
+  box-shadow: var(--shadow-soft);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.audio-btn:hover {
+  transform: translateY(-2px) scale(1.04);
+  background: #FFFFFF;
+}
+
+/* ==========================================================================
+   🌷 HERO STAGE: REALISTIC TULIP GARDEN & CAT
+   ========================================================================== */
+
+.hero-stage {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-height: 700px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background: linear-gradient(180deg, #E0F7FA 0%, #FFF9E6 45%, #C8E6C9 100%);
+}
+
+.sky-backdrop {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+/* Photorealistic Garden Background Layer */
+.realistic-garden-bg-image {
+  position: absolute;
+  inset: 0;
+  background-image: url('assets/realistic_tulip_garden.jpg');
+  background-size: cover;
+  background-position: center bottom;
+  opacity: 0.45;
+  filter: saturate(1.2) contrast(1.05);
+  mask-image: linear-gradient(to top, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 90%);
+  -webkit-mask-image: linear-gradient(to top, rgba(0,0,0,1) 30%, rgba(0,0,0,0) 90%);
+}
+
+.sun-glow {
+  position: absolute;
+  top: -80px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 450px;
+  height: 450px;
+  background: radial-gradient(circle, rgba(255,245,157,0.8) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+}
+
+.petals-container {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 20;
+}
+
+.petal {
+  position: absolute;
+  background: var(--tulip-pink);
+  border-radius: 60% 0 60% 50%;
+  opacity: 0.75;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  animation: fallPetal linear infinite;
+}
+
+@keyframes fallPetal {
+  0% {
+    transform: translateY(-20px) rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+  20% { opacity: 0.85; }
+  100% {
+    transform: translateY(105vh) rotate(720deg) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* Realistic Tulip Garden Rows & Bed */
+.tulip-garden-background, .tulip-garden-foreground {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  pointer-events: none;
+}
+
+.tulip-garden-background {
+  bottom: 80px;
+  z-index: 2;
+  filter: blur(1.2px) brightness(0.95);
+}
+
+.tulip-garden-foreground {
+  bottom: -10px;
+  z-index: 10;
+}
+
+/* Soil & Grass Lawn Bed */
+.grass-bed-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 140px;
+  background: linear-gradient(180deg, rgba(76,175,80,0) 0%, rgba(46,125,50,0.85) 40%, #1B5E20 100%);
+  z-index: 8;
+  pointer-events: none;
+}
+
+.tulip-row {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  width: 100%;
+  padding: 0 10px;
+}
+
+/* SVG Realistic Tulip Flower */
+.realistic-tulip-svg {
+  width: 75px;
+  height: 230px;
+  transform-origin: bottom center;
+  filter: drop-shadow(0 8px 12px rgba(0,0,0,0.18));
+  animation: swayTulipRealistic 3.5s ease-in-out infinite alternate;
+}
+
+@keyframes swayTulipRealistic {
+  0% { transform: rotate(-4deg) skewX(-1deg); }
+  100% { transform: rotate(4deg) skewX(1deg); }
+}
+
+.tulip-row-back .realistic-tulip-svg {
+  width: 58px;
+  height: 180px;
+}
+
+.tulip-row-front .realistic-tulip-svg {
+  width: 85px;
+  height: 250px;
+}
+
+/* ==========================================================================
+   🐈 CAT CHARACTER & 5-6s ENTRANCE ANIMATION
+   ========================================================================== */
+
+.cat-character-wrapper {
+  position: absolute;
+  bottom: 35px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cat-character {
+  width: 230px;
+  height: 260px;
+  position: relative;
+  transform-origin: bottom center;
+  animation: catEntrance 5.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes catEntrance {
+  0% {
+    transform: translateY(240px) scale(0.55);
+    opacity: 0;
+  }
+  35% {
+    transform: translateY(30px) scale(0.85);
+    opacity: 1;
+  }
+  70% {
+    transform: translateY(0px) scale(1.05);
+  }
+  85% {
+    transform: translateY(-8px) scale(0.98);
+  }
+  100% {
+    transform: translateY(0) scale(1);
+  }
+}
+
+.cat-tail {
+  transform-origin: 40px 180px;
+  animation: tailWag 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes tailWag {
+  0% { transform: rotate(-10deg); }
+  100% { transform: rotate(18deg); }
+}
+
+.cat-eyes ellipse {
+  animation: catBlink 4s infinite;
+  transform-origin: center;
+}
+
+@keyframes catBlink {
+  0%, 94%, 98%, 100% { transform: scaleY(1); }
+  96% { transform: scaleY(0.1); }
+}
+
+.cat-mouth-letter {
+  cursor: pointer;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.cat-mouth-letter:hover {
+  transform: scale(1.12) rotate(-2deg);
+}
+
+.cat-speech-bubble {
+  position: absolute;
+  top: -55px;
+  background: #FFFFFF;
+  padding: 10px 18px;
+  border-radius: 20px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--tulip-deep-pink);
+  white-space: nowrap;
+  animation: bounceBubble 2s ease-in-out infinite;
+  opacity: 0;
+  animation-delay: 5.5s;
+  animation-fill-mode: forwards;
+}
+
+.cat-speech-bubble::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 8px 8px 0;
+  border-style: solid;
+  border-color: #FFFFFF transparent;
+}
+
+@keyframes bounceBubble {
+  0%, 100% { transform: translateY(0); opacity: 1; }
+  50% { transform: translateY(-8px); opacity: 1; }
+}
+
+.sparkle-dot {
+  animation: pulseSparkle 1.5s infinite alternate;
+}
+
+@keyframes pulseSparkle {
+  0% { transform: scale(0.6); opacity: 0.5; }
+  100% { transform: scale(1.3); opacity: 1; }
+}
+
+/* ==========================================================================
+   💌 POSTCARDS MODAL DECK
+   ========================================================================== */
+
+.postcards-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+}
+
+.postcards-modal.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(30, 20, 20, 0.55);
+  backdrop-filter: blur(8px);
+}
+
+.postcards-container {
+  position: relative;
+  z-index: 10;
+  width: 90%;
+  max-width: 580px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: var(--radius-lg);
+  padding: 32px 24px;
+  box-shadow: var(--shadow-lg);
+  text-align: center;
+  transform: scale(0.9);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.postcards-modal.active .postcards-container {
+  transform: scale(1);
+}
+
+.modal-close-btn {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: none;
+  background: #F5F5F5;
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  transition: all 0.2s;
+}
+
+.modal-close-btn:hover {
+  background: #FFE0B2;
+  transform: rotate(90deg);
+}
+
+.postcards-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1.8rem;
+  color: var(--text-dark);
+}
+
+.postcards-header .subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+/* 3D Postcard Stack Deck */
+.cards-deck-wrapper {
+  position: relative;
+  width: 100%;
+  height: 280px;
+  margin: 24px 0;
+  perspective: 1000px;
+}
+
+.postcard-item {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  box-shadow: var(--shadow-soft);
+  opacity: 0;
+  transform: translateY(30px) rotateX(-15deg) scale(0.9);
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  pointer-events: none;
+  user-select: none;
+}
+
+.postcard-item.active {
+  opacity: 1;
+  transform: translateY(0) rotateX(0deg) scale(1);
+  pointer-events: auto;
+  z-index: 5;
+}
+
+.postcard-item.exit-left {
+  opacity: 0;
+  transform: translateX(-120%) rotate(-15deg);
+}
+
+.card-inner {
+  height: 100%;
+  background: #FFF8E7;
+  border: 2px dashed #D7CCC8;
+  border-radius: var(--radius-sm);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+  position: relative;
+}
+
+.card-inner.theme-pastel { background: #E8F5E9; border-color: #A5D6A7; }
+.card-inner.theme-lavender { background: #F3E5F5; border-color: #CE93D8; }
+.card-inner.theme-gold { background: #FFF8E1; border-color: #FFE082; }
+
+.card-stamp {
+  position: absolute;
+  top: 14px;
+  right: 16px;
+  width: 44px;
+  height: 52px;
+  border: 2px dashed var(--tulip-deep-pink);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--tulip-deep-pink);
+  transform: rotate(6deg);
+}
+
+.card-heading {
+  font-family: var(--font-heading);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+.card-message {
+  font-family: var(--font-handwriting);
+  font-size: 1.65rem;
+  line-height: 1.4;
+  color: #4E342E;
+  margin: 12px 0;
+}
+
+.card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.card-tag {
+  color: var(--tulip-deep-pink);
+  font-weight: 600;
+}
+
+.signature {
+  font-family: var(--font-handwriting);
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+.scroll-to-gallery-btn {
+  width: 100%;
+  background: var(--tulip-pink);
+  color: #FFFFFF;
+  border: none;
+  padding: 12px 20px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1rem;
+  box-shadow: 0 4px 12px rgba(255, 107, 139, 0.4);
+  transition: all 0.2s;
+}
+
+.scroll-to-gallery-btn:hover {
+  background: var(--tulip-deep-pink);
+  transform: translateY(-2px);
+}
+
+/* Controls */
+.deck-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.deck-nav-btn {
+  background: #F5F5F5;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-family: var(--font-heading);
+  font-weight: 600;
+  color: var(--text-dark);
+  transition: background 0.2s;
+}
+
+.deck-nav-btn:hover {
+  background: #FFE0B2;
+}
+
+.deck-dots {
+  display: flex;
+  gap: 8px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #E0E0E0;
+  transition: all 0.3s;
+}
+
+.dot.active {
+  background: var(--tulip-pink);
+  width: 24px;
+  border-radius: 10px;
+}
+
+/* ==========================================================================
+   📸 SILLY MEMORIES PHOTO GALLERY
+   ========================================================================== */
+
+.gallery-section {
+  padding: 90px 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.section-title-wrapper h2 {
+  font-family: var(--font-heading);
+  font-size: 2.3rem;
+  font-weight: 800;
+  margin: 8px 0;
+}
+
+.section-badge {
+  display: inline-block;
+  background: #FFE0B2;
+  color: #E65100;
+  padding: 4px 14px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.polaroid-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 32px;
+  margin-top: 50px;
+}
+
+.polaroid-card {
+  background: #FFFFFF;
+  padding: 16px 16px 24px 16px;
+  border-radius: 8px;
+  box-shadow: var(--shadow-soft);
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.polaroid-card.tilt-left { transform: rotate(-4deg); }
+.polaroid-card.tilt-right { transform: rotate(4deg); }
+.polaroid-card.tilt-left-subtle { transform: rotate(-2deg); }
+.polaroid-card.tilt-right-subtle { transform: rotate(3deg); }
+
+.polaroid-card:hover {
+  transform: translateY(-10px) rotate(0deg) scale(1.03);
+  box-shadow: var(--shadow-lg);
+  z-index: 10;
+}
+
+.tape-sticker {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 70px;
+  height: 22px;
+  background: rgba(255, 235, 156, 0.7);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.tape-sticker.sticker-pink { background: rgba(255, 128, 171, 0.6); }
+.tape-sticker.sticker-blue { background: rgba(128, 216, 255, 0.6); }
+
+.polaroid-img-wrapper {
+  width: 100%;
+  height: 200px;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.polaroid-illustration {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.bg-pastel-1 { background: linear-gradient(135deg, #FFE0B2, #FF80AB); }
+.bg-pastel-2 { background: linear-gradient(135deg, #B2EBF2, #80CBC4); }
+.bg-pastel-3 { background: linear-gradient(135deg, #E1BEE7, #F8BBD0); }
+.bg-pastel-4 { background: linear-gradient(135deg, #FFF59D, #FFCC80); }
+
+.emoji-art {
+  font-size: 4.5rem;
+  filter: drop-shadow(0 6px 12px rgba(0,0,0,0.15));
+  transition: transform 0.3s;
+}
+
+.polaroid-card:hover .emoji-art {
+  transform: scale(1.15) rotate(6deg);
+}
+
+.doodle-star {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  font-size: 1.4rem;
+}
+
+.polaroid-caption {
+  font-family: var(--font-handwriting);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #4E342E;
+  margin-top: 14px;
+}
+
+/* ==========================================================================
+   🎁 PLAYFUL DODGING GIFT SECTION
+   ========================================================================== */
+
+.gift-section {
+  padding: 80px 24px 120px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+  text-align: center;
+  position: relative;
+}
+
+.gift-arena {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  background: var(--glass-bg);
+  border: 2px dashed #FFD54F;
+  border-radius: var(--radius-lg);
+  margin-top: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.gift-box-wrapper {
+  position: absolute;
+  width: 130px;
+  height: 130px;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), left 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), top 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gift-box-inner {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.gift-body {
+  width: 100%;
+  height: 90px;
+  background: var(--tulip-pink);
+  border-radius: 0 0 12px 12px;
+  position: absolute;
+  bottom: 0;
+  box-shadow: var(--shadow-soft);
+}
+
+.gift-lid {
+  width: 112%;
+  height: 38px;
+  background: var(--tulip-deep-pink);
+  border-radius: 8px;
+  position: absolute;
+  top: 10px;
+  left: -6%;
+  z-index: 2;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.ribbon-stripe-vertical {
+  position: absolute;
+  width: 24px;
+  height: 100%;
+  background: var(--tulip-yellow);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.ribbon-stripe-horizontal {
+  position: absolute;
+  width: 100%;
+  height: 24px;
+  background: var(--tulip-yellow);
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.ribbon-bow {
+  position: absolute;
+  top: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 46px;
+  height: 24px;
+}
+
+.ribbon-bow::before, .ribbon-bow::after {
+  content: '';
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 4px solid var(--tulip-yellow);
+  border-radius: 50% 50% 0 50%;
+}
+
+.ribbon-bow::before { left: 0; transform: rotate(45deg); }
+.ribbon-bow::after { right: 0; transform: rotate(-45deg) scaleX(-1); }
+
+.gift-speech-bubble {
+  position: absolute;
+  top: 25px;
+  background: #FFF3E0;
+  padding: 8px 16px;
+  border-radius: 20px;
+  border: 1.5px solid #FFE0B2;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #E65100;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  pointer-events: none;
+  transition: all 0.3s;
+}
+
+/* ==========================================================================
+   💌 MULTI-CHOICE GIFT SELECTION & FINAL SECRET NOTE
+   ========================================================================== */
+
+.gift-unfolded-modal {
+  display: none;
+  margin-top: 40px;
+  animation: fadeIn 0.6s ease forwards;
+}
+
+.gift-unfolded-modal.active {
+  display: block;
+}
+
+.gift-modal-card {
+  background: #FFFFFF;
+  border-radius: var(--radius-lg);
+  padding: 40px 28px;
+  box-shadow: var(--shadow-lg);
+  border: 2px solid #FFE082;
+  text-align: left;
+}
+
+.gift-modal-header h2 {
+  font-family: var(--font-heading);
+  font-size: 1.9rem;
+  color: var(--text-dark);
+}
+
+.confetti-badge {
+  background: #FFF59D;
+  color: #F57F17;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.gift-options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.gift-option-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #FFF8E7;
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  border: 2px solid #FFE0B2;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.gift-option-item:hover {
+  background: #FFE0B2;
+  transform: translateX(4px);
+}
+
+.gift-checkbox {
+  display: none;
+}
+
+.custom-checkbox {
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 2px solid #FFA726;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #FFFFFF;
+  color: transparent;
+  transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.gift-option-item.checked .custom-checkbox {
+  background: var(--tulip-pink);
+  border-color: var(--tulip-deep-pink);
+  color: #FFFFFF;
+  transform: scale(1.15);
+}
+
+.option-title {
+  display: block;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+.option-desc {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* Secret Birthday Note Unfold */
+.secret-birthday-note {
+  display: none;
+  background: linear-gradient(135deg, #FFF8E7 0%, #FFE0B2 100%);
+  border: 2px dashed #FFB74D;
+  border-radius: var(--radius-md);
+  padding: 28px;
+  margin-top: 30px;
+  animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.secret-birthday-note.active {
+  display: block;
+}
+
+.note-seal {
+  font-size: 2.5rem;
+  text-align: center;
+}
+
+.secret-birthday-note h3 {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--tulip-deep-pink);
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.note-body p {
+  font-family: var(--font-handwriting);
+  font-size: 1.7rem;
+  line-height: 1.5;
+  color: #4E342E;
+}
+
+.note-footer {
+  margin-top: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.replay-experience-btn {
+  background: var(--text-dark);
+  color: #FFFFFF;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-family: var(--font-heading);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.replay-experience-btn:hover {
+  background: var(--tulip-deep-pink);
+  transform: scale(1.05);
+}
+
+/* Footer */
+.site-footer {
+  text-align: center;
+  padding: 30px 20px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+/* Confetti Canvas */
+.confetti-canvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+}
+
+/* Keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(40px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 640px) {
+  .cat-character { width: 180px; height: 210px; }
+  .postcards-container { padding: 24px 16px; }
+  .cards-deck-wrapper { height: 320px; }
+  .card-message { font-size: 1.35rem; }
+  .polaroid-grid { grid-template-columns: 1fr; }
+}

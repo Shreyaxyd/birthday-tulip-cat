@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌸 A Special Birthday Surprise | Tulip Garden & Cat 🐈</title>
+  <meta name="description" content="A magical interactive birthday experience featuring a tulip garden, a cute cat, postcards, silly memories, and a playful gift surprise!">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Lenis Smooth Scroll CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/lenis@1.1.18/dist/lenis.css">
+  
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="paw-cursor-active">
+
+  <!-- Audio Controls Floating Toggle -->
+  <div class="audio-control-container">
+    <button id="audioToggle" class="audio-btn" aria-label="Toggle Sound Effects & Music">
+      <i class="fa-solid fa-volume-high" id="audioIcon"></i>
+      <span id="audioLabel">Sound ON</span>
+    </button>
+  </div>
+
+  <!-- Hero / Intro Stage: Realistic Tulip Garden & Cat -->
+  <section class="hero-stage" id="heroStage">
+    <!-- Photorealistic Garden Layer & Sun Glow -->
+    <div class="sky-backdrop">
+      <div class="realistic-garden-bg-image"></div>
+      <div class="sun-glow"></div>
+      <div id="petalsContainer" class="petals-container"></div>
+    </div>
+
+    <!-- Background Tulip Garden Layer (Depth of Field) -->
+    <div class="tulip-garden-background">
+      <div class="tulip-row tulip-row-back" id="tulipsBack"></div>
+    </div>
+
+    <!-- Cat Character Stage -->
+    <div class="cat-character-wrapper" id="catWrapper">
+      <div class="cat-character" id="catCharacter">
+        <!-- Animated Cat SVG -->
+        <svg class="cat-svg" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+          <!-- Tail -->
+          <path class="cat-tail" d="M 40 180 Q 10 160 20 120 Q 30 90 15 70" fill="none" stroke="#FFA726" stroke-width="14" stroke-linecap="round"/>
+          <path class="cat-tail-stripe" d="M 40 180 Q 10 160 20 120 Q 30 90 15 70" fill="none" stroke="#E65100" stroke-width="4" stroke-linecap="round" stroke-dasharray="10 15"/>
+          
+          <!-- Cat Body -->
+          <ellipse cx="100" cy="170" rx="55" ry="50" fill="#FFB74D"/>
+          <ellipse cx="100" cy="170" rx="38" ry="40" fill="#FFE0B2"/> <!-- Belly -->
+          
+          <!-- Back Paws -->
+          <ellipse cx="50" cy="205" rx="18" ry="12" fill="#FFA726"/>
+          <ellipse cx="150" cy="205" rx="18" ry="12" fill="#FFA726"/>
+          
+          <!-- Front Paws -->
+          <ellipse cx="80" cy="208" rx="14" ry="10" fill="#FFF3E0"/>
+          <ellipse cx="120" cy="208" rx="14" ry="10" fill="#FFF3E0"/>
+          
+          <!-- Cat Head -->
+          <g class="cat-head-group">
+            <!-- Ears -->
+            <polygon points="50,90 35,40 80,65" fill="#FFB74D"/>
+            <polygon points="53,85 42,48 74,67" fill="#FF8A80"/> <!-- Inner Ear Left -->
+            
+            <polygon points="150,90 165,40 120,65" fill="#FFB74D"/>
+            <polygon points="147,85 158,48 126,67" fill="#FF8A80"/> <!-- Inner Ear Right -->
+            
+            <!-- Head Shape -->
+            <ellipse cx="100" cy="95" rx="52" ry="42" fill="#FFB74D"/>
+            
+            <!-- Cheeks -->
+            <ellipse cx="70" cy="105" rx="18" ry="14" fill="#FFE0B2"/>
+            <ellipse cx="130" cy="105" rx="18" ry="14" fill="#FFE0B2"/>
+            
+            <!-- Eyes -->
+            <g class="cat-eyes">
+              <ellipse class="eye-left" cx="76" cy="88" rx="8" ry="11" fill="#2E7D32"/>
+              <circle cx="78" cy="85" r="3" fill="#FFFFFF"/>
+              <ellipse class="eye-right" cx="124" cy="88" rx="8" ry="11" fill="#2E7D32"/>
+              <circle cx="126" cy="85" r="3" fill="#FFFFFF"/>
+            </g>
+            
+            <!-- Nose & Mouth -->
+            <polygon points="100,100 95,95 105,95" fill="#FF8A80"/>
+            <path d="M 95 103 Q 100 108 105 103" fill="none" stroke="#5D4037" stroke-width="2.5" stroke-linecap="round"/>
+            
+            <!-- Whiskers -->
+            <line x1="55" y1="98" x2="25" y2="94" stroke="#5D4037" stroke-width="2"/>
+            <line x1="55" y1="104" x2="20" y2="106" stroke="#5D4037" stroke-width="2"/>
+            <line x1="145" y1="98" x2="175" y2="94" stroke="#5D4037" stroke-width="2"/>
+            <line x1="145" y1="104" x2="180" y2="106" stroke="#5D4037" stroke-width="2"/>
+
+            <!-- The Letter in Cat's Mouth -->
+            <g class="cat-mouth-letter" id="catLetter">
+              <rect x="65" y="104" width="70" height="46" rx="4" fill="#FFF8E7" stroke="#D7CCC8" stroke-width="2"/>
+              <polygon points="65,104 100,128 135,104" fill="#FFE0B2" stroke="#D7CCC8" stroke-width="1.5"/>
+              <circle cx="100" cy="125" r="7" fill="#E53935"/> <!-- Wax Seal -->
+              <path d="M 97 122 L 103 128 M 103 122 L 97 128" stroke="#FFFFFF" stroke-width="1.5"/>
+              
+              <g class="letter-sparkles">
+                <circle cx="58" cy="100" r="3" fill="#FFD54F" class="sparkle-dot"/>
+                <circle cx="142" cy="105" r="2.5" fill="#FF80AB" class="sparkle-dot"/>
+                <circle cx="100" cy="90" r="3.5" fill="#80D8FF" class="sparkle-dot"/>
+              </g>
+            </g>
+          </g>
+        </svg>
+
+        <!-- Click Hint Speech Bubble -->
+        <div class="cat-speech-bubble" id="catSpeech">
+          <span>Click the letter in my mouth! 🐾💌</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Grass Bed Container & Foreground Realistic Tulip Row -->
+    <div class="grass-bed-container"></div>
+    <div class="tulip-garden-foreground">
+      <div class="tulip-row tulip-row-front" id="tulipsFront"></div>
+    </div>
+  </section>
+
+  <!-- Postcards Section Modal Overlay -->
+  <div class="postcards-modal" id="postcardsModal">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    
+    <div class="postcards-container">
+      <button class="modal-close-btn" id="closePostcards" aria-label="Close Postcards">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <div class="postcards-header">
+        <h2>💌 Birthday Postcards Deck</h2>
+        <p class="subtitle">Click on the card to reveal the next message! (Card <span id="currentCardNum">1</span> of <span id="totalCardsNum">4</span>)</p>
+      </div>
+
+      <!-- 3D Card Stack Container -->
+      <div class="cards-deck-wrapper" id="cardsDeck">
+        <!-- Card 1 -->
+        <div class="postcard-item active" data-card="1">
+          <div class="card-inner">
+            <div class="card-stamp">🌸 5¢</div>
+            <div class="card-heading">Happy Birthday! 🎉</div>
+            <div class="card-message">
+              "To someone who makes every day brighter, sweeter, and full of sunshine! Wishing you the happiest birthday filled with joy and laughter!"
+            </div>
+            <div class="card-footer">
+              <span class="card-tag">✨ Tap to open next card</span>
+              <span class="signature">With love, 🐾</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="postcard-item" data-card="2">
+          <div class="card-inner theme-pastel">
+            <div class="card-stamp">🌷 10¢</div>
+            <div class="card-heading">A Bouquet of Wishes 💐</div>
+            <div class="card-message">
+              "May your new year of life bloom like a garden of tulips under the spring sun! May all your dreams and secret goals come true!"
+            </div>
+            <div class="card-footer">
+              <span class="card-tag">✨ Tap to open next card</span>
+              <span class="signature">Always & Forever 💖</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="postcard-item" data-card="3">
+          <div class="card-inner theme-lavender">
+            <div class="card-stamp">🐈 25¢</div>
+            <div class="card-heading">Paws-itively Awesome! 🐾</div>
+            <div class="card-message">
+              "You deserve endless hugs, infinite smiles, extra slices of cake, and all the happiness the universe has to offer today!"
+            </div>
+            <div class="card-footer">
+              <span class="card-tag">✨ Tap to open final card</span>
+              <span class="signature">Meow & Hugs 😸</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="postcard-item" data-card="4">
+          <div class="card-inner theme-gold">
+            <div class="card-stamp">🎁 50¢</div>
+            <div class="card-heading">One Special Quest Left... 🗝️</div>
+            <div class="card-message">
+              "The surprise doesn't end here! Scroll down past the silly memory wall to find your special birthday gift box!"
+            </div>
+            <div class="card-footer">
+              <button class="scroll-to-gallery-btn" id="proceedToGalleryBtn">
+                Scroll to Gallery & Gift ⬇️
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Navigation Indicators -->
+      <div class="deck-controls">
+        <button class="deck-nav-btn" id="prevCardBtn"><i class="fa-solid fa-chevron-left"></i> Prev</button>
+
+        <div class="deck-dots" id="deckDots">
+          <span class="dot active" data-dot="1"></span>
+          <span class="dot" data-dot="2"></span>
+          <span class="dot" data-dot="3"></span>
+          <span class="dot" data-dot="4"></span>
+        </div>
+
+        <button class="deck-nav-btn" id="nextCardBtn">Next <i class="fa-solid fa-chevron-right"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Silly Memories Photo Gallery Section -->
+  <section class="gallery-section" id="gallerySection">
+    <div class="section-title-wrapper">
+      <span class="section-badge">📸 Memory Wall</span>
+      <h2>Silly & Precious Moments 🤪</h2>
+      <p>A small collection of smiles, giggles, and unforgettable memories!</p>
+    </div>
+
+    <div class="polaroid-grid">
+      <!-- Polaroid 1 -->
+      <div class="polaroid-card tilt-left">
+        <div class="tape-sticker"></div>
+        <div class="polaroid-img-wrapper">
+          <div class="polaroid-illustration bg-pastel-1">
+            <span class="emoji-art">👑🤪</span>
+            <div class="doodle-star">✨</div>
+          </div>
+        </div>
+        <div class="polaroid-caption">Chief Officer of Silly Faces 🤪</div>
+      </div>
+
+      <!-- Polaroid 2 -->
+      <div class="polaroid-card tilt-right">
+        <div class="tape-sticker sticker-pink"></div>
+        <div class="polaroid-img-wrapper">
+          <div class="polaroid-illustration bg-pastel-2">
+            <span class="emoji-art">🎂🥳</span>
+            <div class="doodle-star">🎉</div>
+          </div>
+        </div>
+        <div class="polaroid-caption">Master of Extra Cake Slices 🍰</div>
+      </div>
+
+      <!-- Polaroid 3 -->
+      <div class="polaroid-card tilt-left-subtle">
+        <div class="tape-sticker sticker-blue"></div>
+        <div class="polaroid-img-wrapper">
+          <div class="polaroid-illustration bg-pastel-3">
+            <span class="emoji-art">🐈✨</span>
+            <div class="doodle-star">💖</div>
+          </div>
+        </div>
+        <div class="polaroid-caption">Cat Whisperer in Action 🐱</div>
+      </div>
+
+      <!-- Polaroid 4 -->
+      <div class="polaroid-card tilt-right-subtle">
+        <div class="tape-sticker"></div>
+        <div class="polaroid-img-wrapper">
+          <div class="polaroid-illustration bg-pastel-4">
+            <span class="emoji-art">🌟🌈</span>
+            <div class="doodle-star">🎈</div>
+          </div>
+        </div>
+        <div class="polaroid-caption">Spreading Joy Everywhere! 💫</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Playful Dodging Gift Section -->
+  <section class="gift-section" id="giftSection">
+    <div class="section-title-wrapper">
+      <span class="section-badge">🎁 Surprise Time</span>
+      <h2>The Secret Birthday Gift Box</h2>
+      <p id="giftHintText">Catch the gift box below to claim your birthday surprise!</p>
+    </div>
+
+    <!-- Playful Dodging Arena -->
+    <div class="gift-arena" id="giftArena">
+      <!-- Floating Speech Bubble above Gift -->
+      <div class="gift-speech-bubble" id="giftSpeech">
+        <span>Catch me if you can! 😜🎁</span>
+      </div>
+
+      <!-- Interactive Gift Box Container -->
+      <div class="gift-box-wrapper" id="giftBox">
+        <div class="gift-box-inner">
+          <div class="gift-lid">
+            <div class="ribbon-bow"></div>
+          </div>
+          <div class="gift-body">
+            <div class="ribbon-stripe-vertical"></div>
+            <div class="ribbon-stripe-horizontal"></div>
+          </div>
+        </div>
+        <div class="gift-sparkles-around"></div>
+      </div>
+    </div>
+
+    <!-- Multi-Choice Selection & Note Unfold Container (Hidden initially) -->
+    <div class="gift-unfolded-modal" id="giftModal">
+      <div class="gift-modal-card">
+        
+        <div class="gift-modal-header">
+          <span class="confetti-badge">🎉 Unlocked!</span>
+          <h2>Select Your Special Birthday Gift! 🎁</h2>
+          <p>Choose any item below to claim your reward:</p>
+        </div>
+
+        <!-- Multi-Choice Options -->
+        <div class="gift-options-list" id="giftOptionsList">
+          
+          <label class="gift-option-item" data-option="1">
+            <input type="checkbox" class="gift-checkbox" id="opt1">
+            <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
+            <div class="option-content">
+              <span class="option-title">🤗 Unlimited Hugs & Warm Wishes</span>
+              <span class="option-desc">Valid 24/7, 365 days a year with zero expiration!</span>
+            </div>
+          </label>
+
+          <label class="gift-option-item" data-option="2">
+            <input type="checkbox" class="gift-checkbox" id="opt2">
+            <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
+            <div class="option-content">
+              <span class="option-title">🍰 Triple Layer Birthday Cake & Snacks</span>
+              <span class="option-desc">Guaranteed extra big slice with all the chocolate toppings!</span>
+            </div>
+          </label>
+
+          <label class="gift-option-item" data-option="3">
+            <input type="checkbox" class="gift-checkbox" id="opt3">
+            <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
+            <div class="option-content">
+              <span class="option-title">✨ 100% Good Luck & Joy Guarantee</span>
+              <span class="option-desc">May your year ahead be blessed with pure happiness and success!</span>
+            </div>
+          </label>
+
+          <label class="gift-option-item" data-option="4">
+            <input type="checkbox" class="gift-checkbox" id="opt4">
+            <span class="custom-checkbox"><i class="fa-solid fa-check"></i></span>
+            <div class="option-content">
+              <span class="option-title">🛍️ A Surprise Shopping & Treat Day</span>
+              <span class="option-desc">Because you deserve to be pampered today and every day!</span>
+            </div>
+          </label>
+
+        </div>
+
+        <!-- The Secret Note (Revealed when options checked) -->
+        <div class="secret-birthday-note" id="secretNote">
+          <div class="note-seal">💌</div>
+          <h3>Wait... You get ALL of them! 💖✨</h3>
+          <div class="note-body">
+            <p>
+              "Why pick just one when you deserve the entire world? You are truly one of a kind—kind, hilarious, and wonderful. 
+              May this birthday bring you infinite smiles, endless laughter, and all the love you give so generously to everyone around you! 
+              Have the most amazing birthday ever! 🥳🎂🎉"
+            </p>
+          </div>
+          <div class="note-footer">
+            <span>With endless love & warm cat hugs, 🐈🐾</span>
+            <button class="replay-experience-btn" id="replayBtn">Replay Experience 🔄</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <p>Crafted with 💖, Tulips 🌷 & Cat Paws 🐾 for a Very Special Birthday!</p>
+  </footer>
+
+  <!-- Canvas Confetti Container -->
+  <canvas id="confettiCanvas" class="confetti-canvas"></canvas>
+
+  <!-- Lenis Smooth Scroll Script -->
+  <script src="https://unpkg.com/lenis@1.1.18/dist/lenis.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
