@@ -68,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 🔊 REAL AUTHENTIC CAT AUDIO ENGINE (meow.mp3)
+  // 🔊 WEB AUDIO API SOUND SYNTH ENGINE
   // ==========================================
   let isSoundMuted = false;
   const audioToggleBtn = document.getElementById('audioToggle');
@@ -76,7 +76,6 @@ document.addEventListener('DOMContentLoaded', () => {
   const audioLabel = document.getElementById('audioLabel');
 
   let audioCtx = null;
-  let catMeowBuffer = null;
 
   function getAudioContext() {
     if (!audioCtx) {
@@ -88,20 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
     return audioCtx;
   }
 
-  // Pre-load real cat meow audio recording
-  async function loadRealCatMeowAudio() {
-    try {
-      const response = await fetch('assets/meow.mp3');
-      const arrayBuffer = await response.arrayBuffer();
-      const ctx = getAudioContext();
-      catMeowBuffer = await ctx.decodeAudioData(arrayBuffer);
-    } catch (e) {
-      console.warn('Using HTML5 Audio fallback for meow.mp3', e);
-    }
-  }
-  loadRealCatMeowAudio();
-
-  // Unlocks Web Audio API on ANY user interaction (click, touch, key, move)
+  // Unlocks Web Audio API on ANY user interaction
   function unlockAudioEngine() {
     try {
       const ctx = getAudioContext();
@@ -113,7 +99,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   window.addEventListener('pointerdown', unlockAudioEngine, { once: false });
   window.addEventListener('click', unlockAudioEngine, { once: false });
-  window.addEventListener('keydown', unlockAudioEngine, { once: false });
 
   audioToggleBtn.addEventListener('click', () => {
     unlockAudioEngine();
@@ -126,40 +111,8 @@ document.addEventListener('DOMContentLoaded', () => {
       audioIcon.className = 'fa-solid fa-volume-high';
       audioLabel.textContent = 'Sound ON';
       audioToggleBtn.style.opacity = '1';
-      playRealCatMeow(1.0, 0.7);
     }
   });
-
-  // Play Real Organic Cat Meow Recording
-  function playRealCatMeow(pitchRate = 1.0, volume = 0.6) {
-    if (isSoundMuted) return;
-    try {
-      const ctx = getAudioContext();
-      if (ctx.state === 'suspended') {
-        ctx.resume();
-      }
-
-      if (catMeowBuffer) {
-        const source = ctx.createBufferSource();
-        const gainNode = ctx.createGain();
-
-        source.buffer = catMeowBuffer;
-        source.playbackRate.value = pitchRate;
-        gainNode.gain.setValueAtTime(volume, ctx.currentTime);
-
-        source.connect(gainNode);
-        gainNode.connect(ctx.destination);
-
-        source.start(0);
-      } else {
-        // Fallback HTML5 Audio element
-        const audio = new Audio('assets/meow.mp3');
-        audio.volume = Math.min(1.0, volume);
-        audio.playbackRate = pitchRate;
-        audio.play().catch(() => {});
-      }
-    } catch(e) {}
-  }
 
   function playPopSound() {
     if (isSoundMuted) return;
@@ -341,40 +294,15 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // ==========================================
-  // 🐈 CAT ENTRANCE & AUTHENTIC MEOW TIMELINE
+  // 🐈 CAT ENTRANCE & LETTER INTERACTION
   // ==========================================
   const catLetter = document.getElementById('catLetter');
-  const catCharacter = document.getElementById('catCharacter');
   const postcardsModal = document.getElementById('postcardsModal');
   const closePostcards = document.getElementById('closePostcards');
   const modalBackdrop = document.getElementById('modalBackdrop');
 
-  // Entrance Meow Timeline using REAL cat meow recording:
-  // Meow 1: As cat peeks above tulips (~1.8s) - soft cozy tone
-  setTimeout(() => {
-    playRealCatMeow(0.92, 0.5);
-  }, 1800);
-
-  // Meow 2: As cat steps up into full view (~3.8s) - cute natural tone
-  setTimeout(() => {
-    playRealCatMeow(1.0, 0.6);
-  }, 3800);
-
-  // Meow 3: Happy meow when speech bubble pops (~5.6s) - sweet high tone
-  setTimeout(() => {
-    playRealCatMeow(1.08, 0.55);
-  }, 5600);
-
-  // Click or Hover on Cat to hear real cute cat meows anytime!
-  catCharacter.addEventListener('click', (e) => {
-    if (e.target.closest('#catLetter')) return;
-    unlockAudioEngine();
-    playRealCatMeow(0.95 + Math.random() * 0.2, 0.65);
-  });
-
   catLetter.addEventListener('click', () => {
     unlockAudioEngine();
-    playRealCatMeow(1.1, 0.65);
     playPaperSound();
     postcardsModal.classList.add('active');
   });
